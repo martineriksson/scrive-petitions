@@ -1,0 +1,22 @@
+!!!
+
+%html
+
+  %head
+
+    %title Scrive Petitions
+    %meta{ 'http-equiv' => 'Content-Type', :content => "text/html; charset = utf-8" }
+    %link{ :href => "/css/reset.css", :rel => "stylesheet", :type => "text/css" }
+    %link{ :href => "/css/text.css", :rel => "stylesheet", :type => "text/css" }
+    %link{ :href => "/css/960.css", :rel => "stylesheet", :type => "text/css" }
+    %link{ :href => "/css/style.css", :rel => "stylesheet", :type => "text/css" }
+
+  %body
+    #header
+      .container_12
+        .grid_12
+          %h1
+            %a{ :href => '/' } Scrive Petitions
+      .clear
+    .container_12
+      = yield

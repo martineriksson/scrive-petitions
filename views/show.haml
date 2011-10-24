@@ -1,0 +1,28 @@
+
+.grid_8.show
+
+  %h1= @petition.title
+
+  %p= @petition.body
+
+  %p
+    %em= "Created by #{@petition.creator}"
+
+  %form
+
+    %h2 Sign this petition
+
+    %p
+      %em Name
+      %input
+
+      %em Email
+      %input
+
+      %input{ :type => 'submit', :value => 'Sign!' }
+
+  %h2 Signers
+
+  %ul
+    - @petition.signers.each do |signer|
+      %li= signer.name

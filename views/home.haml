@@ -1,0 +1,16 @@
+
+.grid_8.home
+
+  %h1 Petition with ease of mind
+  
+  %p
+    %em
+      %a{ :href => '/create' }
+        Click here to create a new petition!
+  
+  %p Here are some of the ongoing petitions:
+
+  %ul
+    - Petition.all.each do |petition|
+      %li
+        %a{ :href => "/#{petition.slug}" }= petition.title
