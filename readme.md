@@ -13,8 +13,8 @@ If you do not have Bundler installed, do this:
 
 Get the code and install dependencies:
 
-    git clone https://github.com/martineriksson/scrive-petitions.git
-    cd scrive-petitions
+    git clone https://github.com/scrive/petitions.git
+    cd petitions
     bundle install
 
 Run the web app:
