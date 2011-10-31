@@ -65,11 +65,21 @@ class Petition
     signers.sort{ |a,b| b.date <=> a.date }.first
   end
   
+  def delete
+    response = RestClient.post( "#{API[:url]}new_document",
+                                'service' => API[:service],
+                                'password' => API[:password],
+                                'body' => { "document_id" => document_id, }
+                              )
+    @@all.delete self
+  end
+  
   class << self
     
     # This is how we create new petitions.
     #
     def create title, filedata
+      filedata.gsub! "\n", ""
       response = RestClient.post( "#{API[:url]}new_document",
                                   'service' => API[:service],
                                   'password' => API[:password],
@@ -86,17 +96,20 @@ class Petition
 
       puts response
       
-      #scrive_object = response[...]
+      document_id = response['document_id']
       
       #first_signer = 
 
       Petition.new({
-        #:document_id => scrive_object['document_id'],
+        :document_id => document_id,
         :title => title,
+        #:slug => slugify(title),
         :pdf => filedata,
         #:signers => [first_signer],
       })
     end
+
+    
 
     # Fetch all petitions (documents) from the Scrive API
     #
@@ -112,7 +125,8 @@ class Petition
       response = RestClient.post( "#{API[:url]}documents",
                                   'service' => API[:service],
                                   'password' => API[:password],
-                                  'body' => { 'company_id' => '0' }.to_json )
+                                  #'body' => { 'company_id' => '0' }.to_json )
+                                  'body' => {}.to_json )
 
       raise "Could not retreive documents from API!" unless response
 
@@ -122,7 +136,12 @@ class Petition
       petitions ||= []
 
       created = petitions.map do |petition|
-        Petition.new(petition) unless find petition['document_id']
+        unless find petition['document_id']
+          Petition.new({
+            :document_id => petition['document_id'],
+            :title => petition['title'],
+          })
+        end
       end
     end
 
