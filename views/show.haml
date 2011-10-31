@@ -9,7 +9,7 @@
       %script{:src => "http://static.ak.fbcdn.net/connect.php/js/FB.Share", :type => "text/javascript" }
 
     %p
-      %em= "Created by #{@petition.creator.name}"
+      %em= "Created by #{@petition.creator.name rescue "[unknown]"}"
 
 %iframe{ :src => @petition.embed("foo@bar.qux") }
 
