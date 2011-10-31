@@ -1,15 +1,12 @@
 
+# This is the web app. Why complicate when you can simple?
+#
 class ScrivePetitions < Sinatra::Application
 
   get ('/') { haml :home }
 
-  #get ('/create') { haml :create }
-
   post ('/create') do
-    @petition = Petition.create(
-      params[:title],
-      Base64.encode64(params[:file][:tempfile].read)
-    )
+    @petition = Petition.create params[:title], params[:file][:tempfile]
     redirect "/#{@petition.document_id}"
   end
 
@@ -25,13 +22,15 @@ class ScrivePetitions < Sinatra::Application
     sass :style
   end
 
+  helpers do
+    include Rack::Utils
+  end
+
 end
 
-
-## Dummy models
-###############################################################################
-
-
+# This is a wrapper around the Scrive API. Currently, it uses a special version
+# of the API with support for petition documents with special properties.
+#
 class Petition
 
   # First of all, we need to know some things about the API.
@@ -45,15 +44,10 @@ class Petition
   #
   @@all = []
   
-  # Basic attributes of Petition objects. Here we make them available as instance variables with getter and setter methods.
+  # Basic attributes of Petition objects. Here we make them available
+  # as instance variables with getter and setter methods.
   #
-  attr_accessor :document_id,
-                :title,
-                :slug,
-                :body,            # What is this?
-                :pdf,             # PDF-file, Base64 encoded.
-                :responsible,     # The entity being petitioned, email given by creator.
-                :signers          # a list of
+  attr_accessor :document_id, :title, :slug, :pdf, :signers
 
   # To create a petition object, pass a hash with its attributes.
   #
@@ -65,7 +59,7 @@ class Petition
   # To determine who is the creator and owner of a petition, we find out who signed it first.
   #
   def creator
-    #signers.sort{ |a,b| b.date <=> a.date }.first
+    signers.sort{ |a,b| b.date <=> a.date }.first
   end
 
   def signers
@@ -86,8 +80,8 @@ class Petition
     
     # This is how we create new petitions.
     #
-    def create title, filedata
-      filedata.gsub! "\n", ""
+    def create title, file
+      filedata = Base64.encode64(file.read).gsub! "\n", ""
       response = RestClient.post( "#{API[:url]}new_document",
                                   'service' => API[:service],
                                   'password' => API[:password],
@@ -96,7 +90,6 @@ class Petition
                                               "type"       => 10,
                                               "files"      => [{
                                                 :name => title,
-                                                #:content => Base64.encode64(open('test-petition.pdf').read),
                                                 :content => filedata,
                                               }]
                                             }.to_json
@@ -111,9 +104,7 @@ class Petition
       Petition.new({
         :document_id => document_id,
         :title => title,
-        #:slug => slugify(title),
         :pdf => filedata,
-        #:signers => [first_signer],
       })
     end
 
@@ -131,12 +122,9 @@ class Petition
       response = RestClient.post( "#{API[:url]}documents",
                                   'service' => API[:service],
                                   'password' => API[:password],
-                                  #'body' => { 'company_id' => '0' }.to_json )
                                   'body' => {}.to_json )
 
       raise "Could not retreive documents from API!" unless response
-
-      #puts response
 
       petitions = JSON.parse(response)['documents']
       petitions ||= []
@@ -179,6 +167,8 @@ class Petition
     JSON.parse(response)['link'] + "sign"
   end
 
+  # Support model to represent people who have signed petitions.
+  #
   class Signer
     attr_accessor :name, :email, :date
 
