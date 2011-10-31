@@ -8,6 +8,8 @@
   %p
     %em= "Created by #{@petition.creator}"
 
+  %iframe{ :src => @petition.embed("foo@bar.qux") }
+
   %form
 
     %h2 Sign this petition

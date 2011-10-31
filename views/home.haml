@@ -13,4 +13,4 @@
   %ul
     - Petition.all.each do |petition|
       %li
-        %a{ :href => "/#{petition.slug}" }= petition.title
+        %a{ :href => "/#{petition.document_id}" }= petition.title

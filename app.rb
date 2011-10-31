@@ -30,13 +30,15 @@ end
 ## Dummy models
 ###############################################################################
 
+
 class Petition
 
   # First of all, we need to know some things about the API.
   #
-  API = { :url      => "http://petitions-devel.scrive.com/integration/api/",
-          :service  => "test_service",
-          :password => "test_service" }
+  API = { :url       => "http://petitions-devel.scrive.com/integration/api/",
+          :embed_url => "https://petitions-devel.scrive.com",
+          :service   => "test_service",
+          :password  => "test_service" }
 
   # This is the local document 'database', a list of Petition objects.
   #
@@ -62,7 +64,11 @@ class Petition
   # To determine who is the creator and owner of a petition, we find out who signed it first.
   #
   def creator
-    signers.sort{ |a,b| b.date <=> a.date }.first
+    #signers.sort{ |a,b| b.date <=> a.date }.first
+  end
+  
+  def signers
+    Signer.fetch document_id
   end
   
   def delete
@@ -94,7 +100,7 @@ class Petition
                                             }.to_json
                                 )
 
-      puts response
+      #puts response
       
       document_id = response['document_id']
       
@@ -108,8 +114,6 @@ class Petition
         #:signers => [first_signer],
       })
     end
-
-    
 
     # Fetch all petitions (documents) from the Scrive API
     #
@@ -130,7 +134,7 @@ class Petition
 
       raise "Could not retreive documents from API!" unless response
 
-      puts response
+      #puts response
 
       petitions = JSON.parse(response)['documents']
       petitions ||= []
@@ -163,7 +167,27 @@ class Petition
                                           }.to_json
                               )
     raise "Could not retreive embed_frame from API!" unless response
-    response
+
+    JSON.parse(response)['link'] + "sign"
+  end
+
+  class Signer
+    attr_accessor :name, :email, :date
+
+    def initialize hash_from_api
+      @name  = "#{hash_from_api['fstname']} #{hash_from_api['sndname']}"
+      @email = hash_from_api['email']
+      @date  = hash_from_api['sign']
+    end
+
+    def self.fetch document_id
+      response = RestClient.post( "#{API[:url]}document",
+                                  'service' => API[:service],
+                                  'password' => API[:password],
+                                  'body' => { "document_id" => document_id, }.to_json )
+
+      JSON.parse(response)['document']['involved'].map { |s| Signer.new s }
+    end
   end
 
 end
