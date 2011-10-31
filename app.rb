@@ -66,17 +66,18 @@ class Petition
   def creator
     #signers.sort{ |a,b| b.date <=> a.date }.first
   end
-  
+
   def signers
     Signer.fetch document_id
   end
   
   def delete
-    response = RestClient.post( "#{API[:url]}new_document",
+    response = RestClient.post( "#{API[:url]}remove_document",
                                 'service' => API[:service],
                                 'password' => API[:password],
-                                'body' => { "document_id" => document_id, }
+                                'body' => { "document_id" => document_id, }.to_json
                               )
+    puts "Deleted something? #{response.inspect}"
     @@all.delete self
   end
   
@@ -152,6 +153,12 @@ class Petition
     def find document_id
       @@all.select{ |p| p.document_id == document_id }.first
     end
+    
+    # Only run this if you are crazy:
+    #
+    def kill_em_all!
+      all.each { |p| p.delete }
+    end
 
   end
 
@@ -192,3 +199,4 @@ class Petition
 
 end
 
+Petition.kill_em_all!
