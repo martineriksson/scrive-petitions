@@ -42,5 +42,5 @@
       - Petition.all.each do |petition|
         %a{ :href => "/#{petition.document_id}" }
           .item.box
-            = petition.title
+            = escape_html petition.title
           
