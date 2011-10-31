@@ -5,6 +5,13 @@
     %h1= @petition.title
 
     %p
+      Facebook:
+      %a{ :name => "fb_share", :type => "button_count", :share_url => "http://scrive.com/petitions/#{@petition.document_id}" }
+      %script{:src => "http://static.ak.fbcdn.net/connect.php/js/FB.Share", :type => "text/javascript" }
+      <a name="fb_share" type="box_count" share_url="http://scrive.com/petitions/#{@petition.document_id" href="http://www.facebook.com/sharer.php">Share</a>
+      <script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
+
+    %p
       %em= "Created by #{@petition.creator}"
 
 %iframe{ :src => @petition.embed("foo@bar.qux") }

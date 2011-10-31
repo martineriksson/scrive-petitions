@@ -6,12 +6,15 @@
 
     %title Scrive Petitions
     %meta{ 'http-equiv' => 'Content-Type', :content => "text/html; charset = utf-8" }
-    %link{ :href => "/css/reset.css", :rel => "stylesheet", :type => "text/css" }
-    %link{ :href => "/css/text.css", :rel => "stylesheet", :type => "text/css" }
-    %link{ :href => "/css/960.css", :rel => "stylesheet", :type => "text/css" }
-    %link{ :href => "/css/style.css", :rel => "stylesheet", :type => "text/css" }
-    %script{:src => "/javascript/jquery-1.4.2.min.js"}
-    %script{:src => "/javascript/jquery.curvycorners.min.js"}
+    %link{ :href => "#{BASE_URL}/css/reset.css", :rel => "stylesheet", :type => "text/css" }
+    %link{ :href => "#{BASE_URL}/css/text.css", :rel => "stylesheet", :type => "text/css" }
+    %link{ :href => "#{BASE_URL}/css/960.css", :rel => "stylesheet", :type => "text/css" }
+    %link{ :href => "#{BASE_URL}/css/style.css", :rel => "stylesheet", :type => "text/css" }
+    %script{:src => "#{BASE_URL}/javascript/jquery-1.4.2.min.js"}
+    %script{:src => "#{BASE_URL}/javascript/jquery.curvycorners.min.js"}
+    %script{:src => "http://scrive.com/js/analytics.js"}
+    
+    
 
     - if nil
       %link{ :href => "http://scrive.com/css/main.css", :rel => "stylesheet", :type => "text/css" }

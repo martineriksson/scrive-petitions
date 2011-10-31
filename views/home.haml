@@ -23,13 +23,13 @@
       is already under way.
 
     %p
-      %img{ :src => "/images/24hbc.png", :width => "100px", :style => "float:left; margin-right: 20px" }
+      %img{ :src => "#{BASE_URL}/images/24hbc.png", :width => "100px", :style => "float:left; margin-right: 20px" }
       This application was created during <a href="http://www.24hbc.se/">24 Hour Business Camp 2011</a>,
       in between hot baths at the <a href="http://www.yasuragi.se/">Yasuragi Spa</a>.
 
   .grid_6
     .box.create_petition
-      %form{ :method => "post", :action => "/create", :enctype => "multipart/form-data" }
+      %form{ :method => "post", :action => "#{BASE_URL}/create", :enctype => "multipart/form-data" }
 
         %h2 What's your Cause?
         %input.title{ :name => "title" }
@@ -40,7 +40,7 @@
       %h2 Ongoing petitions
 
       - Petition.all.each do |petition|
-        %a{ :href => "/#{petition.document_id}" }
+        %a{ :href => "#{BASE_URL}/#{petition.document_id}" }
           .item.box
             = escape_html petition.title
           
