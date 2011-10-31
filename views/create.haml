@@ -3,13 +3,16 @@
 
   %h1 Create a new petition
 
-  %form
+  %form{ :method => "post", :action => "/create", :enctype => "multipart/form-data" }
 
     %h3 Title
-    %input
+    %input{ :name => "title" }
 
     %h3 Description
-    %textarea
+    %textarea{ :name => "description" }
+    
+    %h3 PDF file
+    %input{ :name => "file", :type => "file" }
 
     %p
       %input{ :type => 'submit' }

@@ -5,6 +5,14 @@ class ScrivePetitions < Sinatra::Application
 
   get ('/create') { haml :create }
 
+  post ('/create') do
+    Petition.create(
+      params[:title],
+      Base64.encode64(params[:file][:tempfile].read)
+    )
+    redirect '/create'
+  end
+
   get '/:petition' do
     @petition = Petition.find params[:petition]
     pass unless @petition
@@ -22,12 +30,11 @@ end
 ## Dummy models
 ###############################################################################
 
-
 class Petition
 
   # First of all, we need to know some things about the API.
   #
-  API = { :url      => "http://staging.scrive.com/integration/api/",
+  API = { :url      => "http://petitions-devel.scrive.com/integration/api/",
           :service  => "test_service",
           :password => "test_service" }
 
@@ -62,20 +69,33 @@ class Petition
     
     # This is how we create new petitions.
     #
-    def create attributes
+    def create title, filedata
       response = RestClient.post( "#{API[:url]}new_document",
                                   'service' => API[:service],
                                   'password' => API[:password],
                                   'body' => { "company_id" => '0',
-                                              "title"      => "Test Petition",
-                                              "files"      => Base64.encode64(open('test-petition.pdf').read),
-                                              "type"       => 10
+                                              "title"      => title,
+                                              "type"       => 10,
+                                              "files"      => [{
+                                                :name => title,
+                                                #:content => Base64.encode64(open('test-petition.pdf').read),
+                                                :content => filedata,
+                                              }]
                                             }.to_json
                                 )
 
       puts response
+      
+      #scrive_object = response[...]
+      
+      #first_signer = 
 
-      Petition.new attributes
+      Petition.new({
+        #:document_id => scrive_object['document_id'],
+        :title => title,
+        :pdf => filedata,
+        #:signers => [first_signer],
+      })
     end
 
     # Fetch all petitions (documents) from the Scrive API
@@ -96,7 +116,10 @@ class Petition
 
       raise "Could not retreive documents from API!" unless response
 
-      petitions = JSON.parse response
+      puts response
+
+      petitions = JSON.parse(response)['documents']
+      petitions ||= []
 
       created = petitions.map do |petition|
         Petition.new(petition) unless find petition['document_id']
