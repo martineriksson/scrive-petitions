@@ -1,6 +1,4 @@
 
-BASE_URL = "http://scrive-petitions.heroku.com"
-
 # This is the web app. Why complicate when you can simple?
 #
 class ScrivePetitions < Sinatra::Application
