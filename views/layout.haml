@@ -10,6 +10,18 @@
     %link{ :href => "/css/text.css", :rel => "stylesheet", :type => "text/css" }
     %link{ :href => "/css/960.css", :rel => "stylesheet", :type => "text/css" }
     %link{ :href => "/css/style.css", :rel => "stylesheet", :type => "text/css" }
+    %script{:src => "/javascript/jquery-1.4.2.min.js"}
+    %script{:src => "/javascript/jquery.curvycorners.min.js"}
+
+    - if nil
+      %link{ :href => "http://scrive.com/css/main.css", :rel => "stylesheet", :type => "text/css" }
+      %link{ :href => "http://scrive.com/theme/style.css", :rel => "stylesheet", :type => "text/css" }
+      %link{ :href => "http://scrive.com/theme/newdesign.css", :rel => "stylesheet", :type => "text/css" }
+      %link{ :href => "http://scrive.com/theme/calendar.css", :rel => "stylesheet", :type => "text/css" }
+      %link{ :href => "http://scrive.com/theme/symbols.css", :rel => "stylesheet", :type => "text/css" }
+      %link{ :href => "http://scrive.com/theme/buttons.css", :rel => "stylesheet", :type => "text/css" }
+      %link{ :href => "http://scrive.com/theme/flash.css", :rel => "stylesheet", :type => "text/css" }
+    
 
   %body
     #header
@@ -18,5 +30,13 @@
           %h1
             %a{ :href => '/' } Scrive Petitions
       .clear
-    .container_12
+
+    - unless @show
+      .container_12
+        = yield
+        .grid_12.footer
+    - else
       = yield
+      .container_12
+        .grid_12.footer
+        

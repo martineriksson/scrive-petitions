@@ -1,30 +1,21 @@
 
-.grid_8.show
+.container_12
+  .grid_12
 
-  %h1= @petition.title
+    %h1= @petition.title
 
-  %p= @petition.body
-
-  %p
-    %em= "Created by #{@petition.creator}"
-
-  %iframe{ :src => @petition.embed("foo@bar.qux") }
-
-  %form
-
-    %h2 Sign this petition
+    %p= @petition.body
 
     %p
-      Name
-      %input
+      %em= "Created by #{@petition.creator}"
 
-      Email
-      %input
+%iframe{ :src => @petition.embed("foo@bar.qux") }
 
-      %input{ :type => 'submit', :value => 'Sign!' }
+.container_12.show
+  .grid_12
 
-  %h2 Signers
+    %h2 Signers
 
-  %ul
-    - @petition.signers.each do |signer|
-      %li= signer.name
+    %ul
+      - @petition.signers.each do |signer|
+        %li= signer.name

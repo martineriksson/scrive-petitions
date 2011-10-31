@@ -3,19 +3,20 @@ class ScrivePetitions < Sinatra::Application
 
   get ('/') { haml :home }
 
-  get ('/create') { haml :create }
+  #get ('/create') { haml :create }
 
   post ('/create') do
-    Petition.create(
+    @petition = Petition.create(
       params[:title],
       Base64.encode64(params[:file][:tempfile].read)
     )
-    redirect '/create'
+    redirect "/#{@petition.document_id}"
   end
 
   get '/:petition' do
     @petition = Petition.find params[:petition]
     pass unless @petition
+    @show = true
     haml :show
   end  
 
@@ -103,7 +104,7 @@ class Petition
 
       #puts response
       
-      document_id = response['document_id']
+      document_id = JSON.parse(response)['document_id']
       
       #first_signer = 
 
@@ -199,4 +200,4 @@ class Petition
 
 end
 
-Petition.kill_em_all!
+#Petition.kill_em_all!

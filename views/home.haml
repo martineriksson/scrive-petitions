@@ -1,16 +1,46 @@
 
-.grid_8.home
+.home
+  .grid_12
 
-  %h1 Petition with peace of mind
+    %h1 Scrive Petitions
   
-  %p
-    %em
-      %a{ :href => '/create' }
-        Click here to create a new petition!
+  .grid_6
+    
+    %br
   
-  %p Here are some of the ongoing petitions:
+    %p
+      Based on the Scrive API for electronic document signatures, Scrive Petition
+      lets you create petitions for the causes you are passionate about - with
+      industry strength identification of every signed person.
 
-  %ul
-    - Petition.all.each do |petition|
-      %li
-        %a{ :href => "/#{petition.document_id}" }= petition.title
+    %p
+      For formal petitions to the government, e.g. to force politicians to hold
+      a referendum, strong identification is necessary. The Scrive API provides
+      identification and secure signing through e-legitimation or BankID.
+    
+    %p
+      You provide your petition as a PDF file, give it a name, press Petition! - now your cause
+      is already under way.
+
+    %p
+      %img{ :src => "/images/24hbc.png", :width => "100px", :style => "float:left; margin-right: 20px" }
+      This application was created during <a href="http://www.24hbc.se/">24 Hour Business Camp 2011</a>,
+      in between hot baths at the <a href="http://www.yasuragi.se/">Yasuragi Spa</a>.
+
+  .grid_6
+    .box.create_petition
+      %form{ :method => "post", :action => "/create", :enctype => "multipart/form-data" }
+
+        %h2 What's your Cause?
+        %input.title{ :name => "title" }
+        %input.file{ :name => "file", :type => "file", :value => "PDF" }
+        %input.submit{ :type => 'submit', :value => "Petition!" }  
+
+    .ongoing_petitions
+      %h2 Ongoing petitions
+
+      - Petition.all.each do |petition|
+        %a{ :href => "/#{petition.document_id}" }
+          .item.box
+            = petition.title
+          
